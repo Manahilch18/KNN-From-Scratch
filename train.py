@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from k_nearest_neighbors import KNearestNeighbors
+from model.k_nearest_neighbors import KNearestNeighbors
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import confusion_matrix,classification_report,accuracy_score
@@ -25,22 +25,22 @@ X_test=scaler.transform(X_test)
 # Train Custom KNN
 knn=KNearestNeighbors(k=5)
 knn.fit(X_train,y_train)
-# accuracy Score
-from sklearn.metrics import accuracy_score
-y_pred = knn.predict(X_test)
-print("Accuracy:",accuracy_score(y_test, y_pred))
 
 # Model Evaluation
+y_pred = knn.predict(X_test) 
 
-print(confusion_matrix(y_test, y_pred))
+print("\nModel Performance")
+
+print(f"\nConfusion Matrix: {confusion_matrix(y_test, y_pred)}")
 print(f"Accuracy : {accuracy_score(y_test, y_pred):.4f}")
+print("\nClassification Report")
 print(classification_report(y_test, y_pred))
 
 # Predict New User
 def predict_new():    
-    age=int(input("Enter your age"))  
-    salary=int(input("Enter your salary"))     
-    X_new=np.array([[age],[salary]]).reshape(1,2)
+    age=int(input("Enter your age: "))  
+    salary=int(input("Enter your salary: "))     
+    X_new=np.array([[age,salary]])
     X_new=scaler.transform(X_new)
     
     result=knn.predict(X_new)
@@ -48,8 +48,8 @@ def predict_new():
         print("Customer is NOT likely to purchase the product.")
     else:
         print("Customer is likely to purchase the product.")
-        
-predict_new()
+if __name__ == "__main__":
+    predict_new()
 
 # Decision Boundary
 
@@ -68,6 +68,26 @@ plt.xlabel("Age (Scaled)")
 plt.ylabel("Estimated Salary (Scaled)")
 plt.title("KNN Decision Boundary")
 plt.savefig("outputs/decision_boundary.png", dpi=300,bbox_inches="tight")
+plt.show() 
+
+# Confusion Matrix Heatmap  
+cm = confusion_matrix(y_test, y_pred)
+plt.figure(figsize=(6, 5))
+
+plt.imshow(cm, cmap="Blues")
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted Label")
+plt.ylabel("True Label")
+plt.xticks([0, 1], ["Not Purchased", "Purchased"])
+plt.yticks([0, 1], ["Not Purchased", "Purchased"])
+
+# Add values inside each cell
+for i in range(cm.shape[0]):
+    for j in range(cm.shape[1]):
+        plt.text(j,i,cm[i, j],ha="center",va="center",color="black",fontsize=12)
+plt.colorbar()
+plt.tight_layout()
+plt.savefig("outputs/confusion_matrix.png",dpi=300,bbox_inches="tight")
 plt.show()
-if __name__ == "__main__":
-    predict_new()
+
+plt.close()

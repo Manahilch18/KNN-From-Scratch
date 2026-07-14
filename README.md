@@ -4,21 +4,46 @@ A from-scratch implementation of the **K-Nearest Neighbors** algorithm in Python
 
 This project does **not** use `sklearn`'s built-in KNN classifier — the algorithm itself (distance calculation, neighbor voting) is implemented manually in `k_nearest_neighbors.py`. `sklearn` is only used for preprocessing, train/test splitting, and evaluation metrics.
 
----
+This project implements the K-Nearest Neighbors (KNN) classification algorithm from scratch using Python. The model predicts whether a customer is likely to purchase a product based on Age and Estimated Salary. The project includes data analysis, preprocessing, model training, evaluation, and visualization without using sklearn's built-in KNN classifier.
+
 
 ## 📂 Project Structure
 
 ```
-.
-├── k_nearest_neighbors.py     # Custom KNN algorithm implementation
-├── knn_test.py                    # Data loading, training, evaluation, visualization
-├── Social_Network_Ads.csv     # Dataset
-└── README.md                  # Project documentation
+KNN-Social-Network-Ads/
+│
+├── data/
+│   └── Social_Network_Ads.csv
+│
+├── models/
+│   └── knn.py
+│
+├── notebooks/
+│   ├── 01_EDA.ipynb
+│   └── 02_Data_Preprocessing.ipynb
+│
+├── outputs/
+│   ├── decision_boundary.png
+│   └── confusion_matrix.png
+│
+├── train.py
+├── requirements.txt
+├── README.md
+└── LICENSE               # Project documentation
 ```
 
-> **Note:** Rename your two scripts as `k_nearest_neighbors.py` and `main.py` respectively so the `import` statement works correctly.
 
----
+✔ Exploratory Data Analysis (EDA)
+✔ Data Preprocessing
+✔ Custom KNN Implementation
+✔ Manual Euclidean Distance
+✔ Feature Scaling
+✔ Model Evaluation
+✔ Confusion Matrix
+✔ Classification Report
+✔ Decision Boundary Visualization
+✔ Confusion Matrix Heatmap
+✔ Live Customer Prediction
 
 ## ⚙️ How It Works
 
@@ -57,15 +82,14 @@ The `Social_Network_Ads.csv` dataset contains:
 Install dependencies before running:
 
 ```bash
-pip install pandas numpy matplotlib scikit-learn
+pip install requirements.txt
 ```
 
----
 
 ## ▶️ Usage
 
 ```bash
-python main.py
+python train.py
 ```
 
 You will see, in order:
@@ -74,29 +98,35 @@ You will see, in order:
 3. A full classification report.
 4. A decision boundary plot showing how the model separates the two classes.
 
----
 
 ## 📈 Sample Output
 
 ```
-Training Done
-Accuracy: 0.93
-[[50  3]
- [ 3 24]]
+Model initialized successfully
 
-Enter your age: 35
-Enter your salary: 60000
-Will not purchase
+Model Performance
 
+Confusion Matrix: [[47  4]
+ [ 4 25]]
+Accuracy : 0.9000
+
+Classification Report
               precision    recall  f1-score   support
-           0       0.94      0.94      0.94        53
-           1       0.89      0.89      0.89        27
+
+           0       0.92      0.92      0.92        51
+           1       0.86      0.86      0.86        29
+
+    accuracy                           0.90        80
+   macro avg       0.89      0.89      0.89        80
+weighted avg       0.90      0.90      0.90        80
+
+Enter your age: 55
+Enter your salary: 88000
+Customer is likely to purchase the product.
 ```
-
-*(Actual numbers will vary slightly each run since the train/test split is random and no `random_state` is fixed.)*
-
----
-
+## Visual Results
+   ![alt text](image-1.png)
+   ![alt text](image-1.png)
 ## ⚠️ Known Limitations
 
 - **No `random_state`** is set in `train_test_split`, so accuracy and confusion matrix values will differ slightly on every run.
@@ -104,11 +134,10 @@ Will not purchase
 - **Blocking input** — `predict_new()` uses `input()`, which pauses script execution before the classification report and plot are generated. Consider moving it to the end of the script if you want uninterrupted execution.
 - Only 2 features (**Age**, **Salary**) are used; `Gender` is ignored.
 
----
+
 
 ## 🚀 Possible Improvements
 
-- Add `random_state=42` to `train_test_split` for reproducible results.
 - Vectorize distance computation using NumPy broadcasting for faster predictions.
 - Add cross-validation to choose the optimal value of `k`.
 - Allow weighted voting (closer neighbors count more).
