@@ -125,7 +125,7 @@ Enter your salary: 88000
 Customer is likely to purchase the product.
 ```
 ## Visual Results
-   ![alt text](image-1.png)
+   ![alt text](image.png)
    ![alt text](image-1.png)
 ## ⚠️ Known Limitations
 
