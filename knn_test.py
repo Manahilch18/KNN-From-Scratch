@@ -1,22 +1,28 @@
+# Import Libraries
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from k_nearest_neighbors import KNearestNeighbors
-data=pd.read_csv("Social_Network_Ads.csv")
-
-X=data.iloc[:,2:4].values
-y=data.iloc[:,-1].values
-
 from sklearn.model_selection import train_test_split
-X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.20)
-
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import confusion_matrix,classification_report,accuracy_score
+
+# Load Dataset
+data=pd.read_csv("data/Social_Network_Ads.csv")
+
+# Feature Selection
+X=data[["Age", "EstimatedSalary"]].values 
+y =data["Purchased"].values
+
+# Train-Test Split
+X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.20,random_state=42,stratify=y)
+
+# Feature Scaling
 scaler=StandardScaler()
 X_train=scaler.fit_transform(X_train)
 X_test=scaler.transform(X_test)
-
-# An object for KNN
-
+ 
+# Train Custom KNN
 knn=KNearestNeighbors(k=5)
 knn.fit(X_train,y_train)
 # accuracy Score
@@ -24,11 +30,13 @@ from sklearn.metrics import accuracy_score
 y_pred = knn.predict(X_test)
 print("Accuracy:",accuracy_score(y_test, y_pred))
 
-# Confusion Matrix
-from sklearn.metrics import confusion_matrix
+# Model Evaluation
 
 print(confusion_matrix(y_test, y_pred))
+print(f"Accuracy : {accuracy_score(y_test, y_pred):.4f}")
+print(classification_report(y_test, y_pred))
 
+# Predict New User
 def predict_new():    
     age=int(input("Enter your age"))  
     salary=int(input("Enter your salary"))     
@@ -36,17 +44,12 @@ def predict_new():
     X_new=scaler.transform(X_new)
     
     result=knn.predict(X_new)
-    if result==0:
-        print("Will not purchase")
+    if result[0] == 0:
+        print("Customer is NOT likely to purchase the product.")
     else:
-        print("will purchase it")
+        print("Customer is likely to purchase the product.")
         
 predict_new()
-# Classification Report
-from sklearn.metrics import classification_report
-
-print(classification_report(y_test, y_pred))
-
 
 # Decision Boundary
 
@@ -64,4 +67,7 @@ plt.scatter(X_train[:,0],X_train[:,1],c=y_train,edgecolors='black',cmap='winter'
 plt.xlabel("Age (Scaled)")
 plt.ylabel("Estimated Salary (Scaled)")
 plt.title("KNN Decision Boundary")
+plt.savefig("outputs/decision_boundary.png", dpi=300,bbox_inches="tight")
 plt.show()
+if __name__ == "__main__":
+    predict_new()
